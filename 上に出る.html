@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>あなたの価値観絶対見つかる！価値観診断</title>
+  <style>
+    :root {
+      --main-green: #28a745;
+      --light-green: #e6f9ec;
+      --border-green: #66cc99;
+      --dark-green: #1c4425;
+    }
+
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--light-green);
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e5631;
+      font-size: 1.8em;
+    }
+
+    .description, .question, .result {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 64, 0, 0.1);
+    }
+
+    .description {
+      border-left: 5px solid var(--main-green);
+    }
+
+    .question {
+      border-left: 5px solid var(--border-green);
+    }
+
+    .question p {
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin: 6px 0;
+      font-size: 0.95em;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 20px auto;
+      padding: 14px;
+      font-size: 16px;
+      background-color: var(--main-green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .result {
+      display: none;
+      border: 2px solid #2e8b57;
+    }
+
+    .image-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .image-row img {
+      max-width: 48%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #b2dfdb;
+    }
+
+    #resultLink {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--main-green);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #resultLink:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+        font-size: 15px;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 12px;
+      }
+
+      .image-row img {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>シュプランガーの価値類型論診断</h1>
+
+  <div class="description">
+    <p>
+      このサイトでは、ドイツの哲学者エドゥアルト・シュプランガーの価値類型論に基づき、あなたの価値観タイプを診断します。<br>
+      9問、2分程度の診断です。<br>
+      あなたの価値観にあった山形の魅力を紹介します！ぜひ楽しみながら診断してみてください！
+    </p>
+  </div>
+
+  <!-- 診断結果を先に配置 -->
+  <div id="resultBox" class="result">
+    <h2>診断結果</h2>
+    <p id="resultText"></p>
+    <div class="image-row">
+      <img id="resultImage1" src="" alt="診断画像1">
+      <img id="resultImage2" src="" alt="診断画像2">
+    </div>
+    <p><a id="resultLink" href="#" target="_blank">詳しく見る</a></p>
+  </div>
+
+  <!-- 質問フォーム -->
+  <form id="quizForm">
+    <div id="questions"></div>
+    <button type="button" onclick="diagnose()">診断する</button>
+  </form>
+
+  <script>
+    const questions = [
+      {
+        text: "質問1：行くならどこに行きたい？",
+        choices: [
+          { text: "リゾート地", score: 6 },
+          { text: "博物館", score: 5 },
+          { text: "ショッピング", score: 4 },
+          { text: "自然豊かな場所", score: 3 },
+          { text: "美術館", score: 2 },
+          { text: "遊園地", score: 1 }
+        ]
+      },
+      {
+        text: "質問2：家を選ぶ基準は？",
+        choices: [
+          { text: "立地", score: 6 },
+          { text: "無駄のなさ", score: 5 },
+          { text: "家賃", score: 4 },
+          { text: "風水（運気）", score: 3 },
+          { text: "レイアウト", score: 2 },
+          { text: "近所の人", score: 1 }
+        ]
+      },
+      {
+        text: "質問3：一番大切にしていることは？",
+        choices: [
+          { text: "権力", score: 6 },
+          { text: "正当性", score: 5 },
+          { text: "合理性", score: 4 },
+          { text: "道徳", score: 3 },
+          { text: "美しさ", score: 2 },
+          { text: "協調性", score: 1 }
+        ]
+      },
+      {
+        text: "質問4：あなたの喜びは？",
+        choices: [
+          { text: "地位が上がること", score: 6 },
+          { text: "正しいこと", score: 5 },
+          { text: "富を得ること", score: 4 },
+          { text: "愛を得ること", score: 3 },
+          { text: "自由であること", score: 2 },
+          { text: "他者へ協力や奉仕すること", score: 1 }
+        ]
+      },
+      {
+        text: "質問5：一か所だけ自分を強化するなら？",
+        choices: [
+          { text: "運の良さ", score: 6 },
+          { text: "頭の良さ", score: 5 },
+          { text: "才能", score: 4 },
+          { text: "寛容さ", score: 3 },
+          { text: "美貌", score: 2 },
+          { text: "コミュニケーション能力", score: 1 }
+        ]
+      },
+      {
+        text: "質問6：恋愛対象で重視することは？",
+        choices: [
+          { text: "頼りがいがあるか？", score: 6 },
+          { text: "賢さがあるか？", score: 5 },
+          { text: "お金持ちか？", score: 4 },
+          { text: "思いやりがあるか？", score: 3 },
+          { text: "オシャレさがあるか？", score: 2 },
+          { text: "どれだけ自分を好きか？", score: 1 }
+        ]
+      },
+      {
+        text: "質問7：人に悩み相談されたらどうする？",
+        choices: [
+          { text: "自分への影響を考える", score: 6 },
+          { text: "原因を考える", score: 5 },
+          { text: "解決策を考える", score: 4 },
+          { text: "同意する・元気づける", score: 3 },
+          { text: "それも運命だと思う", score: 2 },
+          { text: "なぐさめる・元気づける", score: 1 }
+        ]
+      },
+      {
+        text: "質問8：手に入るなら？",
+        choices: [
+          { text: "未来予知の能力", score: 6 },
+          { text: "瞬間移動の能力", score: 5 },
+          { text: "相手を分析できる能力", score: 4 },
+          { text: "人の心が読める能力", score: 3 },
+          { text: "形を自由自在に変えられる能力", score: 2 },
+          { text: "天気を操れる能力", score: 1 }
+        ]
+      },
+      {
+        text: "質問9：誰かとの旅行で大切なのは？",
+        choices: [
+          { text: "格式の高さ", score: 6 },
+          { text: "効率の良さ", score: 5 },
+          { text: "費用", score: 4 },
+          { text: "評判", score: 3 },
+          { text: "自分が楽しめるか", score: 2 },
+          { text: "相手が楽しめるか", score: 1 }
+        ]
+      }
+    ];
+
+    const typeResults = {
+      A: { text: "権威型：社会的な勝ち負けを重んじる、権力に生きる人です", image1: "https://imgur.com/IUsO9sb.jpg", image2: "https://imgur.com/05RxoZb.jpg", link: "https://example.com/a" },
+      B: { text: "理論型：理論性を重んじる、真理の追究が好きな人です", image1: "https://imgur.com/iFy8a0C.jpg", image2: "https://imgur.com/I96AzED.jpg", link: "https://example.com/b" },
+      C: { text: "経済型：経済的な損得を重んじる、お金が好きな人です", image1: "https://imgur.com/o89VKsI.jpg", image2: "https://imgur.com/XMzmMNS.jpg", link: "https://example.com/c" },
+      D: { text: "宗教型：宗教的な道徳を重んじる、精神世界が好きな人です", image1: "https://imgur.com/FzSeffl.jpg", image2: "https://imgur.com/sarWQPK.jpg", link: "https://example.com/d" },
+      E: { text: "美的型：美しい物を重んじる、感性に生きる人です", image1: "https://imgur.com/NQHj5lt.jpg", image2: "https://imgur.com/BMDmNZh.jpg", link: "https://example.com/e" },
+      F: { text: "社会型：協調性を重んじる、仲間や愛情に生きる人です", image1: "https://imgur.com/4idqBzg.jpg", image2: "https://imgur.com/PbGzMc7.jpg", link: "https://example.com/f" }
+    };
+
+    window.onload = () => {
+      const container = document.getElementById("questions");
+      questions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<p>${q.text}</p>`;
+        q.choices.forEach(choice => {
+          div.innerHTML += `<label><input type="radio" name="q${i}" value="${choice.score}">${choice.text}</label>`;
+        });
+        container.appendChild(div);
+      });
+    };
+
+    function diagnose() {
+      let total = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!selected) {
+          alert("すべての質問に答えてください。");
+          return;
+        }
+        total += parseInt(selected.value);
+      }
+      const type = getResultType(total);
+      const result = typeResults[type];
+      document.getElementById("resultText").innerHTML = `${result.text}<br>合計点数：<strong>${total}点</strong>`;
+      document.getElementById("resultImage1").src = result.image1;
+      document.getElementById("resultImage2").src = result.image2;
+      document.getElementById("resultLink").href = result.link;
+      document.getElementById("resultBox").style.display = "block";
+      document.getElementById("resultBox").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function getResultType(score) {
+      if (score <= 9) return "F";
+      if (score <= 18) return "E";
+      if (score <= 27) return "D";
+      if (score <= 36) return "C";
+      if (score <= 45) return "B";
+      return "A";
+    }
+  </script>
+</body>
+</html>
+

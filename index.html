@@ -1,8 +1,8 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>絶対見つかる?価値観診断</title>
   <style>
     :root {
@@ -26,7 +26,7 @@
       font-weight: bold;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
-    .description, .question, .result {
+    .description, .question, .result, .closing, .feedback {
       background: #fff;
       padding: 20px;
       margin: 20px auto;
@@ -75,6 +75,25 @@
       font-weight: bold;
     }
     #resultLink:hover { text-decoration: underline; }
+    .feedback {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0fff5;
+      border-left: 4px solid var(--main-green);
+      border-radius: 8px;
+      font-size: 0.95em;
+      text-align: center;
+    }
+    .feedback a {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--dark-green);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    .feedback a:hover {
+      color: var(--main-green);
+    }
     @media (max-width: 600px) {
       body { padding: 15px; font-size: 15px; }
       h1 { font-size: 2.5em; }
@@ -85,6 +104,7 @@
 </head>
 <body>
   <h1>絶対見つかる?価値観診断</h1>
+
   <div class="description">
     <p>このサイトでは、ドイツの哲学者エドゥアルト・シュプランガーの価値類型論に基づき、あなたの価値観タイプを診断します。<br>
     9問、2分程度の診断です。<br>
@@ -98,17 +118,33 @@
       <img id="resultImage1" src="" alt="診断画像1">
       <img id="resultImage2" src="" alt="診断画像2">
     </div>
-    <p><a id="resultLink" href="#" target="_blank">観光地の案内サイト</a></p>
+    <p><a id="resultLink" href="#" target="_blank">観光地案内サイト←ここをクリック！</a></p>
   </div>
 
-  <form id="quizForm">
+  <form id="quizForm" onsubmit="return false;">
     <div id="questions"></div>
     <button type="button" onclick="diagnose()">診断する</button>
   </form>
 
+  <div class="closing">
+    <h3>最後に</h3>
+    <p>
+      診断していただきありがとうございます！<br>
+      最終的な価値観は本人のみにしかわかりません。<br>
+      ぜひ実際に訪れてみて山形の良さを体感してみてください！
+    </p>
+    <p style="text-align: right;">— 山形市立商業高等学校　産業調査部</p>
+  </div>
+
+  <div class="feedback">
+    <p>診断結果についてのご意見・ご感想をお聞かせください。</p>
+    <a href="mailto:stk23056@ycchs.jp?subject=Values Diagnostic Feedback&body=Please provide your thoughts and opinions on the results of the diagnosis.">
+      フィードバックを送る
+    </a>
+  </div>
+  
   <script>
-    const questions = [
-      { text: "質問1：行くならどこに行きたい？", choices: [ { text: "リゾート地", score: 6 }, { text: "博物館", score: 5 }, { text: "ショッピング", score: 4 }, { text: "自然豊かな場所", score: 3 }, { text: "美術館", score: 2 }, { text: "遊園地", score: 1 } ] },
+    const questions = [{ text: "質問1：行くならどこに行きたい？", choices: [ { text: "リゾート地", score: 6 }, { text: "博物館", score: 5 }, { text: "ショッピング", score: 4 }, { text: "自然豊かな場所", score: 3 }, { text: "美術館", score: 2 }, { text: "遊園地", score: 1 } ] },
       { text: "質問2：家を選ぶ基準は？", choices: [ { text: "立地", score: 6 }, { text: "無駄のなさ", score: 5 }, { text: "家賃", score: 4 }, { text: "風水（運気）", score: 3 }, { text: "レイアウト", score: 2 }, { text: "近所の人", score: 1 } ] },
       { text: "質問3：一番大切にしていることは？", choices: [ { text: "権力", score: 6 }, { text: "正当性", score: 5 }, { text: "合理性", score: 4 }, { text: "道徳", score: 3 }, { text: "美しさ", score: 2 }, { text: "協調性", score: 1 } ] },
       { text: "質問4：あなたの喜びは？", choices: [ { text: "地位が上がること", score: 6 }, { text: "正しいこと", score: 5 }, { text: "富を得ること", score: 4 }, { text: "愛を得ること", score: 3 }, { text: "自由であること", score: 2 }, { text: "他者へ協力や奉仕すること", score: 1 } ] },
@@ -119,14 +155,13 @@
       { text: "質問9：誰かとの旅行で大切なのは？", choices: [ { text: "格式の高さ", score: 6 }, { text: "効率の良さ", score: 5 }, { text: "費用", score: 4 }, { text: "評判", score: 3 }, { text: "自分が楽しめるか", score: 2 }, { text: "相手が楽しめるか", score: 1 } ] }
     ];
 
-    const typeResults = {
-      A: { text: "権威型：社会的な勝ち負けを重んじる、権力に生きる人です", image1: "https://i.imgur.com/IUsO9sb.jpg", image2: "https://i.imgur.com/05RxoZb.jpg", link: "https://sanho-oso.github.io/sanchokeni/" },
-      B: { text: "理論型：理論性を重んじる、真理の追究が好きな人です", image1: "https://i.imgur.com/iFy8a0C.jpg", image2: "https://imgur.com/YySeT2S", link: "https://sanho-oso.github.io/sanchoriron/" },
-      C: { text: "経済型：経済的な損得を重んじる、お金が好きな人です", image1: "https://i.imgur.com/o89VKsI.jpg", image2: "https://i.imgur.com/XMzmMNS.jpg", link: "https://sanho-oso.github.io/sanchokeizai/" },
+    const typeResults = {A: { text: "権威型：社会的な勝ち負けを重んじる、権力に生きる人です", image1: "https://i.imgur.com/IUsO9sb.jpg", image2: "https://imgur.com/zD8fp3o.jpg", link: "https://sanho-oso.github.io/sanchokeni/" },
+      B: { text: "理論型：理論性を重んじる、真理の追究が好きな人です", image1: "https://i.imgur.com/iFy8a0C.jpg", image2: "https://imgur.com/YySeT2S.jpg", link: "https://sanho-oso.github.io/sanchoriron/" },
+      C: { text: "経済型：経済的な損得を重んじる、お金が好きな人です", image1: "https://imgur.com/Ol5XWVG.jpg", image2: "https://i.imgur.com/XMzmMNS.jpg", link: "https://sanho-oso.github.io/sanchokeizai/" },
       D: { text: "宗教型：宗教的な道徳を重んじる、精神世界が好きな人です", image1: "https://i.imgur.com/FzSeffl.jpg", image2: "https://i.imgur.com/sarWQPK.jpg", link: "https://sanho-oso.github.io/sanchosyukyo/" },
-      E: { text: "美的型：美しい物を重んじる、感性に生きる人です", image1: "https://imgur.com/DMz949u", image2: "https://i.imgur.com/BMDmNZh.jpg", link: "https://sanho-oso.github.io/sanchobiteki/" },
+      E: { text: "美的型：美しい物を重んじる、感性に生きる人です", image1: "https://imgur.com/DMz949u.jpg", image2: "https://imgur.com/KJ2Jzv7.jpg", link: "https://sanho-oso.github.io/sanchobiteki/" },
       F: { text: "社会型：協調性を重んじる、仲間や愛情に生きる人です", image1: "https://i.imgur.com/4idqBzg.jpg", image2: "https://i.imgur.com/PbGzMc7.jpg", link: "https://sanho-oso.github.io/sanchosyakai/" }
-    };
+};
 
     document.addEventListener("DOMContentLoaded", () => {
       const container = document.getElementById("questions");

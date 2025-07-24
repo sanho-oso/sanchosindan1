@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>スタート画面</title>
+  <style>
+    :root {
+      --mint: #e1f7ee;         /* 背景ミント */
+      --white: #ffffff;        /* 白背景カード */
+      --accent-green: #7ac89f; /* ボタンや枠の色 */
+      --text: #333333;         /* メインテキスト */
+      --shadow: rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--mint);
+      font-family: 'Sawarabi Gothic', sans-serif;
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .op-container {
+      text-align: center;
+      background-color: var(--white);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px var(--shadow);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 1.2s ease-out forwards;
+    }
+
+    .op-container h1 {
+      font-size: 2.4em;
+      color: var(--accent-green);
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .op-container p {
+      font-size: 1.1em;
+      color: var(--text);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="op-container">
+    <h1>絶対見つかる？</h1>
+    <p>2分でわかる、価値観診断</p>
+  </div>
+
+  <script>
+    // 2.5秒後にメインページへ遷移（ファイル名に応じて変更OK）
+    setTimeout(() => {
+      window.location.href = "index.html"; // 
+    }, 2500);
+  </script>
+</body>
+</html>
+
